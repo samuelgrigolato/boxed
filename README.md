@@ -64,3 +64,14 @@ cd linux
 cd dist
 ./boxed
 ```
+
+## Useful Commands to Remember
+
+- Related to loading shared libraries on Linux:
+
+```
+readelf -d linux/dist/boxed
+sudo lsof | grep boxed | grep SDL
+objdump -p linux/dist/boxed
+LD_LIBRARY_PATH=. ./boxed
+```
