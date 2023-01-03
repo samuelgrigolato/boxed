@@ -2,8 +2,5 @@
   "C_Cpp.default.includePath": [
     "../SDL/include",
     "../SDL_image"
-  ],
-  "files.associations": {
-    "sdl.h": "c"
-  }
+  ]
 }

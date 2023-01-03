@@ -1,11 +1,22 @@
+
+#ifdef __ANDROID__
+/*
+  The line below solves the following compilation problem:
+    /home/samuel/Android/Sdk/ndk/21.4.7075529/toolchains/llvm/prebuilt/linux-x86_64/lib64/clang/9.0.9/include/mmintrin.h:525:12: error: invalid conversion between vector type '__m64' (vector of 1 'long long' value) and integer type 'int' of different size
+      return (__m64)__builtin_ia32_psubw((__v4hi)__m1, (__v4hi)__m2);
+*/
+#define SDL_DISABLE_IMMINTRIN_H 1
+#endif
+
 #include <SDL.h>
 #include <SDL_image.h>
 
 #ifdef __ANDROID__
+
 #include <android/log.h>
 #include <jni.h>
 
-#define TAG "BoxerNative"
+#define TAG "Boxed"
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, TAG, __VA_ARGS__)
 #define LOGW(...) __android_log_print(ANDROID_LOG_WARN, TAG, __VA_ARGS__)
 #define LOGI(...) __android_log_print(ANDROID_LOG_INFO, TAG, __VA_ARGS__)
@@ -147,7 +158,7 @@ int main(int argc, char* argv[]) {
       LOGE("GetEnv return=%d (expected %d)\n", res, JNI_OK);
 
       jstring cep = (*env)->NewStringUTF(env, "14820464");
-      jclass cls = (*env)->FindClass(env, "dev/samuel/boxer/HTTPRequests");
+      jclass cls = (*env)->FindClass(env, "dev/samuel/boxed/HTTPRequests");
       jmethodID mid = (*env)->GetStaticMethodID(env, cls, "callViaCep", "(Ljava/lang/String;)Ljava/lang/String;");
       jstring retorno = (*env)->CallStaticObjectMethod(env, cls, mid, cep);
 

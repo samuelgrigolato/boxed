@@ -3,7 +3,7 @@
      com.gamemaker.game
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="org.libsdl.app"
+    package="dev.samuel.boxed"
     android:versionCode="1"
     android:versionName="1.0"
     android:installLocation="auto">
@@ -31,6 +31,8 @@
     <uses-feature
         android:name="android.hardware.type.pc"
         android:required="false" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <!-- Audio recording support -->
     <!-- if you want to capture audio, uncomment this. -->
@@ -70,7 +72,7 @@
         <meta-data android:name="SDL_ENV.SDL_ACCELEROMETER_AS_JOYSTICK" android:value="0"/>
          -->
      
-        <activity android:name="SDLActivity"
+        <activity android:name="Boxed"
             android:label="@string/app_name"
             android:alwaysRetainTaskState="true"
             android:launchMode="singleInstance"
