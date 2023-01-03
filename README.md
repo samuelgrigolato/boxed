@@ -65,6 +65,13 @@ cd dist
 ./boxed
 ```
 
+## Copy Android Template from SDL Repo
+
+```
+mkdir android/
+cp -R ../SDL/android-project/* android
+```
+
 ## Useful Commands to Remember
 
 - Related to loading shared libraries on Linux:
