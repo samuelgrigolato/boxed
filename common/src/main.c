@@ -39,6 +39,10 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved) {
 #include "http_requests.h"
 #endif
 
+#ifdef __LINUX__
+#include <curl/curl.h>
+#endif
+
 void onAudioDeviceCallback(void* userdata, Uint8* stream, int len);
 
 Uint8 *hitBuffer;
@@ -185,7 +189,7 @@ int main(int argc, char* argv[]) {
         char errbuf[CURL_ERROR_SIZE];
         errbuf[0] = 0;
 
-        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
         curl_easy_setopt(curl, CURLOPT_URL, "https://viacep.com.br/ws/14820464/json/");
         curl_easy_setopt(curl, CURLOPT_ERRORBUFFER, errbuf);
 

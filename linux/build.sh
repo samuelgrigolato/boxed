@@ -13,7 +13,7 @@ gcc \
   -I$BASE_DIR/../../SDL_image \
   -L$BASE_DIR/../../SDL/build/.libs \
   -L$BASE_DIR/../../SDL_image/.libs \
-  -lSDL2 -lSDL2_image \
+  -lcurl -lSDL2 -lSDL2_image \
   -Wl,-rpath,. \
   $BASE_DIR/../common/src/main.c \
   -o $BASE_DIR/dist/boxed
