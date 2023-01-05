@@ -35,6 +35,10 @@ jint JNI_OnLoad(JavaVM* vm, void* reserved) {
 #define LOGD(...) printf(__VA_ARGS__)
 #endif
 
+#ifdef __APPLE__
+#include "http_requests.h"
+#endif
+
 void onAudioDeviceCallback(void* userdata, Uint8* stream, int len);
 
 Uint8 *hitBuffer;
@@ -142,6 +146,7 @@ int main(int argc, char* argv[]) {
     SDL_RenderFillRect(renderer, &httpCall);
     SDL_RenderCopy(renderer, enemyTexture, &enemyPose, &enemy);
     SDL_RenderPresent(renderer);
+    SDL_Delay(100);
     if (SDL_GetTicks64() >= nextEnemyPoseTimeout) {
       enemyPose.x += 16;
       if (enemyPose.x == 256) {
@@ -165,49 +170,54 @@ int main(int argc, char* argv[]) {
       const char* retornoChars = (*env)->GetStringUTFChars(env, retorno, NULL);
       LOGE("CallStatic return=%s\n", (const char *)retornoChars);
       (*env)->ReleaseStringUTFChars(env, retorno, retornoChars);
+      #elif defined(__APPLE__)
+      const char* retorno = callViaCep("14820464");
+      LOGI("callViaCep=%s\n", retorno);
+      #else
+
+      CURL *curl = curl_easy_init();
+      if (curl == NULL) {
+        httpCallRComp = 255;
+        httpCallGComp = 0;
+      } else {
+
+        CURLcode res;
+        char errbuf[CURL_ERROR_SIZE];
+        errbuf[0] = 0;
+
+        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_easy_setopt(curl, CURLOPT_URL, "https://viacep.com.br/ws/14820464/json/");
+        curl_easy_setopt(curl, CURLOPT_ERRORBUFFER, errbuf);
+
+        res = curl_easy_perform(curl);
+
+        if (res != CURLE_OK) {
+          httpCallRComp = 10;
+          httpCallGComp = 50;
+
+          LOGE("\n\nError: %s\n", errbuf);
+
+        } else {
+
+          long responseCode;
+          curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &responseCode);
+
+          curl_easy_cleanup(curl);
+
+          LOGE("\n\nResponse code: %ld\n", responseCode);
+          if (responseCode >= 200 && responseCode < 300) {
+            httpCallRComp = 0;
+            httpCallGComp = 255;
+          } else {
+            httpCallRComp = 200;
+            httpCallGComp = 50;
+          }
+
+        }
+
+      }
+
       #endif
-
-      // CURL *curl = curl_easy_init();
-      // if (curl == NULL) {
-      //   httpCallRComp = 255;
-      //   httpCallGComp = 0;
-      // } else {
-
-      //   CURLcode res;
-      //   char errbuf[CURL_ERROR_SIZE];
-      //   errbuf[0] = 0;
-
-      //   curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, false);
-      //   curl_easy_setopt(curl, CURLOPT_URL, "https://viacep.com.br/ws/14820464/json/");
-      //   curl_easy_setopt(curl, CURLOPT_ERRORBUFFER, errbuf);
-
-      //   res = curl_easy_perform(curl);
-
-      //   if (res != CURLE_OK) {
-      //     httpCallRComp = 10;
-      //     httpCallGComp = 50;
-
-      //     LOGE("\n\nError: %s\n", errbuf);
-
-      //   } else {
-
-      //     long responseCode;
-      //     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &responseCode);
-
-      //     curl_easy_cleanup(curl);
-
-      //     LOGE("\n\nResponse code: %ld\n", responseCode);
-      //     if (responseCode >= 200 && responseCode < 300) {
-      //       httpCallRComp = 0;
-      //       httpCallGComp = 255;
-      //     } else {
-      //       httpCallRComp = 200;
-      //       httpCallGComp = 50;
-      //     }
-
-      //   }
-
-      // }
 
     }
   }

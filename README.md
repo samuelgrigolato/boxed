@@ -194,6 +194,30 @@ cd android/
 adb logcat | grep Boxed
 ```
 
+## Creating the Xcode Project
+
+- Select the `iOS` tab.
+- Select `Game`.
+- Fill in Product Name.
+- Select the Team.
+- Keep language as Objective-C.
+- Keep Game Technology as Metal.
+- Untick Tests.
+- Untick "Create Git repository on my Mac".
+- Delete everything except Assets and LaunchScreen.
+- Change deployment target to a reasonable value (e.g. 12).
+- Clone both SDL and SDL_image as siblings to this repository folder.
+- Checkout the `SDL2` branch on both repositories.
+- Add both `SDL/Xcode/SDL/SDL.xcodeproj` and `SDL_image/Xcode/SDL_image.xcodeproj` to the project.
+- Clear the "Main storyboard file base name" property (Main Target > Info Tab > Custom iOS Target Properties).
+- Add both include folders (SDL > Public Headers and SDL_image root folder) to the target's Build Settings > Header Search Path.
+- Do the same for the SDL folder on the SDL_image Framework target header search path.
+- Add both libraries (SDL > SDL2.framework from Framework-IOS and SDL_image > SDL2_image.framework) to the Build Phases > Link Binary With Libraries section.
+- Mark both frameworks to be embedded and signed on General > Frameworks, Libraries and Embedded Content.
+- Expand SDL > Library Source > main > uikit and drag SDL_uikit_main.c to the main game group.
+- Add a reference to `main.c` from the `common/src` folder.
+- Add a reference to `common/assets` as well inside the main project group.
+
 ## Useful Commands to Remember
 
 - Related to loading shared libraries on Linux:
@@ -204,3 +228,4 @@ sudo lsof | grep boxed | grep SDL
 objdump -p linux/dist/boxed
 LD_LIBRARY_PATH=. ./boxed
 ```
+
