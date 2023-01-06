@@ -1,6 +1,10 @@
 # Boxed
 
-Step by step guide to prepare a new SDL2 project with shared code that works on Linux, Android and iOS.
+Proof of concept using SDL2 project with shared code that works on Linux, Android and iOS.
+
+This repository was created for personal study purposes, so you won't find proper replication guidelines. Feel free to ask any questions if you want to know more about the process.
+
+Also keep in mind that `common/src/main.c` contains references to all three environments via C macros. In a maintainable code base this should be abstracted away to their respective platform folders for readability reasons. The intent of the proof of concept was to show that a shared C code base was possible, so designs decisions like this were permitted as long as it made the writing of the code easier and faster.
 
 ## Download and Build SDL
 
